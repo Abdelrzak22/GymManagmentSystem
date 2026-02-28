@@ -25,5 +25,13 @@ namespace GymManagmentDAL.Entities
 
        public ICollection<MemberBookSession> MemberBookSession1 { get; set; }
         #endregion
+
+
+        #region trainer=>session
+
+
+        public int trainerId { get; set; }
+        public Trainer trainer { get; set; } = null!;
+        #endregion
     }
 }
