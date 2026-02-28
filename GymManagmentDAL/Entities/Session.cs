@@ -11,5 +11,19 @@ namespace GymManagmentDAL.Entities
         public string Description { get; set; } = null!;
         public int Capacity { get; set; }
         public DateTime EndDate { get; set; }
+
+        #region  relation between category and session
+
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }=null!;
+        #endregion
+
+
+        #region part1 (session and member book session)
+
+
+       public ICollection<MemberBookSession> MemberBookSession1 { get; set; }
+        #endregion
     }
 }
