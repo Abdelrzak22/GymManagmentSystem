@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Data.Context
 {
-    internal class GymdbContext:DbContext
+    public class GymdbContext:DbContext
     {
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=.;Database=GymManagment;Trusted_Connection=true;TrustServerCertificate=true;");
-        }
+        public GymdbContext(DbContextOptions <GymdbContext> options) : base(options) { }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +28,9 @@ namespace GymManagmentDAL.Data.Context
         public DbSet<Plan> Plans { get; set; }  
         public DbSet<Session>Sessions {  get; set; }
         public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<Category> categories { get; set; }
+        public DbSet<MemberBookSession> memberBookSessions {  get; set; }
+        public DbSet<MembePlan> membePlans { get; set; }
 
     }
 }

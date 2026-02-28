@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Entities.Enum
 {
-    internal enum Gender
+    public enum Gender
     {
         Male=1,
         Female

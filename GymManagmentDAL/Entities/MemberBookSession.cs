@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Entities
 {
-    internal class MemberBookSession:BaseEntity
+    public class MemberBookSession:BaseEntity
     {
 
       //BookingDate == CreatedAt

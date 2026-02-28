@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Entities
 {
-    internal abstract class GymUser:BaseEntity
+    public abstract class GymUser:BaseEntity
 
     {
 
