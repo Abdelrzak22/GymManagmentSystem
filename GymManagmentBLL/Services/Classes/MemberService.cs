@@ -65,7 +65,7 @@ namespace GymManagmentBLL.Services.Classes
 
                 return _General.Add(member) > 0;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return false;
 
