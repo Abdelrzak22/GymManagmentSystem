@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Repository.Interfaces
 {
-    internal interface ITrainerRepository
+    internal interface IGeneralRepository<T> where T : BaseEntity
     {
+
         //get all
-        IEnumerable<Trainer> GetAll();
+        IEnumerable<T> GetAll();
         //get by id
-        Trainer GetById(int id);
+        T? GetById(int id);
         //add
-        int Add(Trainer trainer);
+        int Add(T entity);
         //update
-        int update(Trainer trainer);
+        int update(T entity);
         //delete
-        int Delete(int id);
+        int Delete(T entity);
+
     }
 }
