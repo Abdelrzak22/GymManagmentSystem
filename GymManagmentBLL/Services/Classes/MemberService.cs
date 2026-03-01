@@ -17,12 +17,15 @@ namespace GymManagmentBLL.Services.Classes
         private readonly IGeneralRepository<Member> _General;
         private readonly IGeneralRepository<MembePlan> _memberplan;
         private readonly IPlanRepository _plan;
+        private readonly IGeneralRepository<HealthRecord> _heath;
 
-        public MemberService(IGeneralRepository<Member> GeneralRepository,IGeneralRepository<MembePlan> membeplan,IPlanRepository plan)
+        public MemberService(IGeneralRepository<Member> GeneralRepository,IGeneralRepository<MembePlan> membeplan,IPlanRepository plan,
+            IGeneralRepository<HealthRecord> heath)
         {
             _General = GeneralRepository;
             _memberplan = membeplan;
             _plan = plan;
+            _heath = heath;
         }
 
         public bool Creat(CreateMemberViewModel createmodel)
@@ -75,6 +78,21 @@ namespace GymManagmentBLL.Services.Classes
                 return false;
 
             }
+        }
+
+        public HealthRecordViewModel? GetHealthRecordViewModel(int MemberId)
+        {
+            var HealthDetails = _heath.GetById(MemberId);
+            if (HealthDetails is null)
+                return null;
+            return new HealthRecordViewModel()
+            {
+                Height=HealthDetails.Height,
+                Weight=HealthDetails.Weight,
+                Note=HealthDetails.Note,
+                BloodType=HealthDetails.BloodType
+
+            };
         }
 
         public MemberViewModel? GetMemberDetails(int MemberId)
