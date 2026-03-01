@@ -11,7 +11,7 @@ namespace GymManagmentDAL.Repository.Interfaces
     {
 
         //get all
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(Func<T,bool>? condition=null);
         //get by id
         T? GetById(int id);
         //add
