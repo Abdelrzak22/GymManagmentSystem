@@ -34,15 +34,9 @@ namespace GymManagmentBLL.Services.Classes
             {
 
 
-                // if email exist
-                var Emailexist = _General.GetAll(x => x.Email == createmodel.Email).Any();
-
-
-                // if phone exist
-                var PhoneExist = _General.GetAll(x => x.Phone == createmodel.Phone).Any();
 
                 //if exists return false
-                if (Emailexist || PhoneExist)
+                if (EmailExist(createmodel.Email) || PhoneExist(createmodel.Phone))
                     return false;
 
 
@@ -78,6 +72,24 @@ namespace GymManagmentBLL.Services.Classes
                 return false;
 
             }
+        }
+
+        public MemberToUpdateViewModel? GetDataToUpdate(int MemberId)
+        {
+            var memberdata=_General.GetById(MemberId);
+            if (memberdata is null)
+                return null;
+            return new MemberToUpdateViewModel()
+            {
+                Email = memberdata.Email,
+                Phone = memberdata.Phone,
+                Photo = memberdata.Photo,
+                Name = memberdata.Name,
+                BuildingNumber = memberdata.Address.BuldingNumber,
+                Street = memberdata.Address.Street,
+                City = memberdata.Address.City
+
+            };
         }
 
         public HealthRecordViewModel? GetHealthRecordViewModel(int MemberId)
@@ -139,5 +151,48 @@ namespace GymManagmentBLL.Services.Classes
             });
             return members;
         }
+
+        public bool Update(MemberToUpdateViewModel member, int MemberId)
+        {
+            try
+            {
+                if(EmailExist(member.Email) || PhoneExist(member.Phone) )
+                    return false;
+                var memberdata = _General.GetById(MemberId);
+                if(memberdata is null) return false;    
+
+                memberdata.Email=member.Email;  
+                memberdata.Phone=member.Phone;
+                memberdata.UpdateAt = DateTime.Now;
+                memberdata.Address.Street = member.Street;
+                memberdata.Address.City = member.City;
+                memberdata.Address.BuldingNumber=member.BuildingNumber;
+
+                return _General.update(memberdata) > 0;
+
+
+
+                   
+
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
+
+
+        #region CHECK Email and Phone unique 
+
+        private bool EmailExist (string email)
+        {
+            return _General.GetAll(x=>x.Email==email).Any();
+        }
+
+        private bool PhoneExist(string phone)
+        {
+            return _General.GetAll(x => x.Phone == phone).Any();
+        }
+        #endregion
     }
 }
