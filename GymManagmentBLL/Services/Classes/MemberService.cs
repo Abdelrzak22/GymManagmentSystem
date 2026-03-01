@@ -15,9 +15,14 @@ namespace GymManagmentBLL.Services.Classes
     {
 
         private readonly IGeneralRepository<Member> _General;
-        public MemberService(IGeneralRepository<Member> GeneralRepository)
+        private readonly IGeneralRepository<MembePlan> _memberplan;
+        private readonly IPlanRepository _plan;
+
+        public MemberService(IGeneralRepository<Member> GeneralRepository,IGeneralRepository<MembePlan> membeplan,IPlanRepository plan)
         {
             _General = GeneralRepository;
+            _memberplan = membeplan;
+            _plan = plan;
         }
 
         public bool Creat(CreateMemberViewModel createmodel)
@@ -70,6 +75,35 @@ namespace GymManagmentBLL.Services.Classes
                 return false;
 
             }
+        }
+
+        public MemberViewModel? GetMemberDetails(int MemberId)
+        {
+            var Member = _General.GetById(MemberId);
+            if (Member is null)
+                return null;
+            var memberview = new MemberViewModel()
+            {
+                Phone = Member.Phone,
+                Name = Member.Name,
+                Email = Member.Email,
+                Gender = Member.Gender.ToString(),
+                DateOfBirth = Member.Dateofbirth.ToShortDateString(),
+                Address=$"{Member.Address.BuldingNumber}-{Member.Address.Street}-{Member.Address.City}",
+
+            };
+
+            var ActiveMemberShip = _memberplan.GetAll(z => z.Id == MemberId && z.Status == "Active").FirstOrDefault();
+            if(ActiveMemberShip is not null)
+            {
+                memberview.MemberShipStartDate = ActiveMemberShip.CreatedAt.ToShortDateString();
+                memberview.MemberShipEndDate=ActiveMemberShip.EndDate.ToShortDateString() ;
+                var plan = _plan.GetById(ActiveMemberShip.PlanId);
+                memberview.PlanName = plan?.Name;
+            }
+
+            return memberview;
+
         }
 
         public IEnumerable<MemberViewModel> GetMembers()

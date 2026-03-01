@@ -15,5 +15,11 @@ namespace GymManagmentBLL.ViewModels.MemberViewModel
         public string Phone { get; set; } = null!;
         public string Gender { get; set; } = null!;
 
+        public string? DateOfBirth { get; set; }
+        public string? MemberShipStartDate { get; set; }
+        public string? MemberShipEndDate { get; set; }
+        public string? PlanName { get; set; }
+        public string? Address  { get; set; }
+
     }
 }
