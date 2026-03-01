@@ -18,14 +18,16 @@ namespace GymManagmentBLL.Services.Classes
         private readonly IGeneralRepository<MembePlan> _memberplan;
         private readonly IPlanRepository _plan;
         private readonly IGeneralRepository<HealthRecord> _heath;
+        private readonly IGeneralRepository<MemberBookSession> _membersession;
 
         public MemberService(IGeneralRepository<Member> GeneralRepository,IGeneralRepository<MembePlan> membeplan,IPlanRepository plan,
-            IGeneralRepository<HealthRecord> heath)
+            IGeneralRepository<HealthRecord> heath,IGeneralRepository<MemberBookSession> membersession)
         {
             _General = GeneralRepository;
             _memberplan = membeplan;
             _plan = plan;
             _heath = heath;
+            _membersession = membersession;
         }
 
         public bool Creat(CreateMemberViewModel createmodel)
@@ -72,6 +74,36 @@ namespace GymManagmentBLL.Services.Classes
                 return false;
 
             }
+        }
+
+        public bool Delete(int memberId)
+        {
+            var member = _General.GetById(memberId);
+            if (member == null) return false;
+            var ActiveMemberSession = _membersession.GetAll(x => x.Id == memberId && x.Session.CreatedAt > DateTime.Now).Any();
+            if (ActiveMemberSession) return false;
+
+            try
+            {
+                var memberPlan = _memberplan.GetAll(x => x.Id == memberId);
+                if(memberPlan.Any())
+                {
+                    foreach(var item in memberPlan)
+                    {
+                        _memberplan.Delete(item);   
+                    }
+
+                   
+                }
+                return _General.Delete(member) > 0;
+
+            }
+            catch
+            {
+                return false;
+            }
+
+
         }
 
         public MemberToUpdateViewModel? GetDataToUpdate(int MemberId)
