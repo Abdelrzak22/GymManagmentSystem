@@ -147,6 +147,7 @@ namespace GymManagmentBLL.Services.Classes
                 Gender = Member.Gender.ToString(),
                 DateOfBirth = Member.Dateofbirth.ToShortDateString(),
                 Address=$"{Member.Address.BuldingNumber}-{Member.Address.Street}-{Member.Address.City}",
+                
 
             };
 
