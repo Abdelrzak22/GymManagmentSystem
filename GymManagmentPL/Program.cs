@@ -1,3 +1,4 @@
+using GymManagmentBLL;
 using GymManagmentDAL.Data;
 using GymManagmentDAL.Data.Context;
 using GymManagmentDAL.Repository.Classes;
@@ -22,6 +23,7 @@ namespace GymManagmentPL
           
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddAutoMapper(x => x.AddProfile(new MappingProfile()));
             var app = builder.Build();
 
             #region seed data
