@@ -21,6 +21,7 @@ namespace GymManagmentPL
             });
           
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             var app = builder.Build();
 
             #region seed data
