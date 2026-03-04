@@ -165,5 +165,39 @@ namespace GymManagmentBLL.Services.Classes
                 return false;
             }
         }
+
+        public bool RemoveSession(int id)
+        {
+            try
+            {
+                var sesion = _unitOfWork.sessionRepository.GetById(id);
+                if (!IsAllowedToRemove(sesion)) return false;
+                _unitOfWork.sessionRepository.Delete(sesion);
+                return _unitOfWork.SaveChanges() > 0;
+            }
+            catch
+            {
+                return false;
+            }
+           
+            
+        }
+
+
+        private bool IsAllowedToRemove(Session session)
+        {
+            if (session is null) return false;
+            //if session upcoming
+            if (session.CreatedAt > DateTime.Now) return false;
+            //if session started
+
+            if (session.CreatedAt <= DateTime.Now && session.EndDate>DateTime.Now) return false;
+            //if session has active booking
+            var HasActiveSession = _unitOfWork.sessionRepository.BookingSession(session.Id) > 0;
+            if (!HasActiveSession) return false;
+            return true;
+
+
+        }
     }
 }
