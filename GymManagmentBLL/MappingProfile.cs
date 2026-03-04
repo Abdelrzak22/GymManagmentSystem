@@ -27,6 +27,13 @@ namespace GymManagmentBLL
                  .ForMember(dest => dest.CreatedAt, Options => Options.MapFrom(src => src.StartDate))
                  .ForMember(dest => dest.trainerId, Options => Options.MapFrom(src => src.TrainerId));
 
+            CreateMap<Session, UpdateSessionViewModel>()
+                  .ForMember(dest => dest.StartDate, Options => Options.MapFrom(src => src.CreatedAt))
+                  .ForMember(dest => dest.TrainerId, Options => Options.MapFrom(src => src.trainerId));
+
+            CreateMap<UpdateSessionViewModel, Session>()
+                 .ForMember(dest => dest.CreatedAt, Options => Options.MapFrom(src => src.StartDate))
+                 .ForMember(dest => dest.trainerId, Options => Options.MapFrom(src => src.TrainerId));
 
 
 

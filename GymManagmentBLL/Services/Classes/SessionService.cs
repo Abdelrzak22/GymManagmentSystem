@@ -6,6 +6,7 @@ using GymManagmentDAL.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -115,6 +116,54 @@ namespace GymManagmentBLL.Services.Classes
         private bool DateValid(DateTime Start, DateTime End)
         {
             return Start < End;
+        }
+
+
+
+        private bool IsAllowedToUpdate(Session session)
+        {
+            if (session is null) return false;
+            //if session completed
+            if (session.EndDate >DateTime.Now) return false;
+            //if session started
+
+            if (session.CreatedAt <= DateTime.Now) return false;
+            //if session has active booking
+            var HasActiveSession = _unitOfWork.sessionRepository.BookingSession(session.Id) > 0;
+            if (!HasActiveSession) return false;
+            return true;
+
+            
+        }
+
+        public UpdateSessionViewModel GetDataToUpdate(int id)
+        {
+            var session = _unitOfWork.sessionRepository.GetById(id);
+            if (!IsAllowedToUpdate(session)) return null;
+
+            return _mapper.Map<UpdateSessionViewModel>(session);    
+        }
+
+
+        public bool UpdateSession(int id, UpdateSessionViewModel updated)
+        {
+            try
+            {
+                var session = _unitOfWork.sessionRepository.GetById(id);
+                if (!(IsAllowedToUpdate(session))) return false;
+                if (!TrainerExist(updated.TrainerId)) return false;
+                if (!DateValid(updated.StartDate, updated.EndDate)) return false;
+                _mapper.Map<Session>(updated);
+                session.UpdateAt = DateTime.Now;
+                _unitOfWork.sessionRepository.update(session);
+                return _unitOfWork.SaveChanges() > 0;
+            }
+            catch(Exception ex)
+            {
+
+                Console.WriteLine($"dont updated sesion :{ex}");
+                return false;
+            }
         }
     }
 }
