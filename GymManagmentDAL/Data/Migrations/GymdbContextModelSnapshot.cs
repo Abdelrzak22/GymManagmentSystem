@@ -17,7 +17,7 @@ namespace GymManagmentDAL.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,7 +43,7 @@ namespace GymManagmentDAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("GymManagmentDAL.Entities.HealthRecord", b =>
@@ -96,7 +96,7 @@ namespace GymManagmentDAL.Data.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("MembePlan");
+                    b.ToTable("membePlans");
                 });
 
             modelBuilder.Entity("GymManagmentDAL.Entities.Member", b =>
@@ -180,7 +180,7 @@ namespace GymManagmentDAL.Data.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("MemberBookSession");
+                    b.ToTable("memberBookSessions");
                 });
 
             modelBuilder.Entity("GymManagmentDAL.Entities.Plan", b =>
