@@ -4,6 +4,7 @@ using GymManagmentDAL.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagmentDAL.Data.Migrations
 {
     [DbContext(typeof(GymdbContext))]
-    partial class GymdbContextModelSnapshot : ModelSnapshot
+    [Migration("20260308115307_intialcreate4")]
+    partial class intialcreate4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,29 +47,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("categories");
-                });
-
-            modelBuilder.Entity("GymManagmentDAL.Entities.HealthRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BloodType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("GymManagmentDAL.Entities.MembePlan", b =>
@@ -326,15 +306,6 @@ namespace GymManagmentDAL.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GymManagmentDAL.Entities.HealthRecord", b =>
-                {
-                    b.HasOne("GymManagmentDAL.Entities.Member", null)
-                        .WithOne("HealthRecord")
-                        .HasForeignKey("GymManagmentDAL.Entities.HealthRecord", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("GymManagmentDAL.Entities.MembePlan", b =>
                 {
                     b.HasOne("GymManagmentDAL.Entities.Member", "Member")
@@ -356,6 +327,41 @@ namespace GymManagmentDAL.Data.Migrations
 
             modelBuilder.Entity("GymManagmentDAL.Entities.Member", b =>
                 {
+                    b.OwnsOne("GymManagmentDAL.Entities.HealthRecord", "HealthRecord", b1 =>
+                        {
+                            b1.Property<int>("MemberId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("BloodType")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<decimal>("Height")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.Property<int>("Id")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Note")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("UpdateAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<decimal>("Weight")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.HasKey("MemberId");
+
+                            b1.ToTable("Members");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MemberId");
+                        });
+
                     b.OwnsOne("GymManagmentDAL.Entities.Address", "Address", b1 =>
                         {
                             b1.Property<int>("MemberId")
@@ -386,6 +392,9 @@ namespace GymManagmentDAL.Data.Migrations
                         });
 
                     b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("HealthRecord")
                         .IsRequired();
                 });
 
@@ -469,9 +478,6 @@ namespace GymManagmentDAL.Data.Migrations
 
             modelBuilder.Entity("GymManagmentDAL.Entities.Member", b =>
                 {
-                    b.Navigation("HealthRecord")
-                        .IsRequired();
-
                     b.Navigation("MemberBookSession2");
 
                     b.Navigation("Memberplanss");
