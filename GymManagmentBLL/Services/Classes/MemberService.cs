@@ -74,8 +74,9 @@ namespace GymManagmentBLL.Services.Classes
         {
             var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
             if (member == null) return false;
-            var ActiveMemberSession = _unitOfWork.GetRepository<MemberBookSession>().GetAll(x => x.Id == memberId && x.Session.CreatedAt > DateTime.Now).Any();
-            if (ActiveMemberSession) return false;
+            var SessionIds = _unitOfWork.GetRepository<MemberBookSession>().GetAll(x => x.Id == memberId ).Select(b=>b.SessionId);
+            var HasFuterSession = _unitOfWork.GetRepository<Session>().GetAll(x => SessionIds.Contains(x.Id) && x.CreatedAt > DateTime.Now).Any();
+            if (HasFuterSession) return false;
 
             try
             {

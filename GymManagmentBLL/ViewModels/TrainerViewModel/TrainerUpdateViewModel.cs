@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBLL.ViewModels.TrainerViewModel
 {
-    internal class TrainerUpdateViewModel
+    public class TrainerUpdateViewModel
     {
 
-       
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Email is required")]

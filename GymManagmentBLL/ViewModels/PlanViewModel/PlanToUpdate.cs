@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBLL.ViewModels.PlanViewModel
 {
-    internal class PlanToUpdate
+    public class PlanToUpdate
     {
        
         public string PlanName { get; set; } = null!;

@@ -1,4 +1,5 @@
-﻿using GymManagmentBLL.Services.Interfaces;
+﻿using AutoMapper.Execution;
+using GymManagmentBLL.Services.Interfaces;
 using GymManagmentBLL.ViewModels.TrainerViewModel;
 using GymManagmentDAL.Entities;
 using GymManagmentDAL.Repository.Interfaces;
@@ -6,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GymManagmentBLL.Services.Classes
 {
-    internal class TrainerService : ITrainerService
+    public class TrainerService : ITrainerService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -67,6 +69,7 @@ namespace GymManagmentBLL.Services.Classes
                 Name = Trainer.Name,
                 Phone = Trainer.Phone,
                 Email = Trainer.Email,
+                TrainerId=Trainer.Id,
                 DateOfBirth =Trainer.Dateofbirth.ToString(),
                 Address = $"{Trainer.Address.BuldingNumber}-{Trainer.Address.Street}-{Trainer.Address.City}",
                 Specialties=Trainer.specialties.ToString()
@@ -104,6 +107,7 @@ namespace GymManagmentBLL.Services.Classes
                 Name = x.Name,
                 Email = x.Email,
                 Phone = x.Phone,
+                TrainerId=x.Id,
                 DateOfBirth = x.Dateofbirth.ToString(),
                 Specialties = x.specialties.ToString()
 
@@ -115,7 +119,13 @@ namespace GymManagmentBLL.Services.Classes
         public bool Update(int TrainerId, TrainerUpdateViewModel trainerUpdateViewModel)
         {
             var Trainer = _unitOfWork.GetRepository<Trainer>().GetById(TrainerId);
-            if (Trainer is null || EmailExist(Trainer.Email)|| PhoneExist(Trainer.Phone)) return false;
+            if (Trainer == null) return false;
+            var EmailExist = _unitOfWork.GetRepository<Trainer>().GetAll(x => x.Email == trainerUpdateViewModel.Email
+                && x.Id != TrainerId);
+
+            var PhoneExist = _unitOfWork.GetRepository<Trainer>().GetAll(x => x.Phone == trainerUpdateViewModel.Phone
+          && x.Id != TrainerId);
+            if (EmailExist.Any() || PhoneExist.Any()) return false;
 
             Trainer.Email = trainerUpdateViewModel.Email;
             Trainer.Phone=trainerUpdateViewModel.Phone;
